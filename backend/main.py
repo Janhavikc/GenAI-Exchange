@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask
 from routes import main_routes  # Import the routes module
 
 
