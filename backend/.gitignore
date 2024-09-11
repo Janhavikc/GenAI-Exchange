@@ -1,3 +1,5 @@
 .env
 __pycache__
 flask
+client_secret.json
+google-cloud-sdk
