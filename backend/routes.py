@@ -6,18 +6,33 @@ import os
 from dotenv import load_dotenv
 import random
 from flask import send_from_directory
+from google.cloud import aiplatform
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 
 # Load environment variables from .env file
 load_dotenv()
 
-upload = './'
 # Create a blueprint for routes
-main_routes = Blueprint('main', __name__)
+main_routes = Blueprint('imagen', __name__)
+service_account_json = './service-account.json'
 
+def initialize_vertex_ai_client(service_account_json):
+    # Initialize the Vertex AI client
+    aiplatform.init(credentials=service_account_json)
+    
+    # Optionally, you can specify the project and location
+    # aiplatform.init(project='your-project-id', location='us-central1', credentials=service_account_json)
+    
+    print("Vertex AI client initialized successfully.")
 
 @main_routes.route("/imagen", methods=["POST"])
+@jwt_required()
 def imagen():
+    current_user = get_jwt_identity()
+    print(current_user)
+    os.environ["GOOGLE_APPLICATION_CREDENTIALS"]=service_account_json
+
     gcp_project_id = os.getenv('PROJECT_ID') # @param {type: "string"}   
     vertexai.init(project=gcp_project_id)
     
@@ -44,17 +59,17 @@ def imagen():
     # model = genai.GenerativeModel('gemini-pro')
     # chat = model.start_chat(history=[])
 
-    prompt_text = f"Generate creative a images of {item_selling}. Make it attractive so that more Indian people can buy it. Select colors to maintain brand consistency"
+    prompt_text = f"Generate a images of {item_selling}. Make it creative and attractive so that more Indian people can buy it. Select colors to maintain brand consistency"
     if 'discount' in obj:
         discount = obj['discount']
-        prompt_text = prompt_text + f" in the image also show discount of {discount}%"
+        prompt_text = prompt_text + f"Mention the discount of {discount}% in the image."
     
     if 'theme' in obj:
         theme = obj['theme']
         prompt_text = prompt_text + f" and set image theme as {theme}"
     
     # response = chat.send_message(prompt_text)
-    # print(response.text)
+    print(prompt_text)
 
     model = ImageGenerationModel.from_pretrained("imagegeneration@005")
     images = model.generate_images(prompt=prompt_text)
