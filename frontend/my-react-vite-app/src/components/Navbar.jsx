@@ -26,7 +26,7 @@ function Navbar() {
 
   
   return (<>
-    <header className="fixed flex flex-wrap sm:justify-start bg-zinc-900 sm:flex-nowrap w-full text-sm py-3 z-50" style={{width:'98%'}}>
+    <header className="fixed flex flex-wrap sm:justify-start bg-zinc-900 sm:flex-nowrap w-full text-sm py-3 z-50">
   <nav className="max-w-[85rem] w-full mx-auto px-4 flex flex-wrap basis-full items-center justify-between">
     
   <div className="relative inset-y-0 left-0 flex items-center sm:hidden mr-3">

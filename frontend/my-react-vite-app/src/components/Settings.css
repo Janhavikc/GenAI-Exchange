@@ -1,0 +1,30 @@
+.Settings{
+    position: fixed;
+    right: 16px;
+    top: 35%;
+    transform: translateY(-50%);
+    gap: 8px;
+    display: flex;
+    flex-direction: column;
+    padding: 24px 8px;
+    border-radius: 4px;
+    text-align: left;
+    &:empty{
+        padding: 0;
+    }
+}
+.CanvasSettings{
+    position: fixed;
+    right: 16px;
+    top: 70%;
+    transform: translateY(-50%);
+    gap: 8px;
+    display: flex;
+    flex-direction: column;
+    padding: 24px 8px;
+    border-radius: 4px;
+    text-align: left;
+    &:empty{
+        padding: 0;
+    }
+}

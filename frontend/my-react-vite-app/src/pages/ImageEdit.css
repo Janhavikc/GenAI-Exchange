@@ -1,0 +1,47 @@
+.ImageEdit{
+    font-family: sans-serif;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-direction: column;
+    padding: 100px 16px;
+    min-height: 100vh;
+    height: 100%;
+
+}
+
+.Toolbar{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 8px 8px;
+    border-radius: 4px;
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 16px;
+    margin-bottom: 3px;
+    &:empty{
+        display: none;
+    }
+}
+.ImageSelection{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 8px 8px;
+    border-radius: 4px;
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 65px;
+    margin-bottom: 3px;
+    &:empty{
+        display: none;
+    }
+}
+
+.ImageSelection img{
+    border: 2px solid white;
+}
