@@ -23,6 +23,7 @@ function App() {
     <div className='w-full min-h-screen bg-zinc-900 text-white' style={{padding:'0px 20px'}}>
         {isLoading ?<>
           <Spinner/>
+      
         </>:<>
         <Navbar/>
         <Routes>
