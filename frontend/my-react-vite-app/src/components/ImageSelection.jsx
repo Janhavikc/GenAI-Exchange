@@ -1,11 +1,58 @@
 import * as React from 'react';
 import Input from './Input';
-import dummyImage from '../assets/unsplash.jpg'
+import dummyImage from '../assets/unsplash.jpg';
+import { useAuth0 } from "@auth0/auth0-react";
 
 const ImageSelection = ({setImage}) =>{
+    const {getAccessTokenSilently} = useAuth0();
     const [productName, setProductName] = React.useState("");
     const [discount, setDiscount] = React.useState("");
     const [theme, setTheme] = React.useState("");
+    const [userToken, setUserToken] = React.useState('');
+    const [pixelWidth, setPixelWidth] = React.useState('');
+    const [pixelHeight, setPixelHeight] = React.useState('');
+
+
+    React.useEffect(()=>{
+        const getToken=async()=>{
+            const token = await getAccessTokenSilently();
+            setUserToken(token);
+            return token;
+        }
+        getToken();
+    }, [])
+
+    const submitSearch = ()=>{
+        if(userToken && productName && pixelWidth && pixelHeight){
+            const urlsToFetch = [
+                `${window.location.hostname}:5000/imagegen`,
+                `${window.location.hostname}:5000/imagegen`,
+                `${window.location.hostname}:5000/imagegen`,
+                `${window.location.hostname}:5000/imagegen`
+            ];
+            
+            const fetchPromises = urlsToFetch.map(url => 
+                fetch(url, {
+                    method:'POST',
+                    body:{
+                        'search':productName,
+                        'theme':theme,
+                        'discount':discount,
+                        'width':pixelWidth,
+                        'height':pixelHeight
+                    }
+                })
+                    .then(response => response.json())
+            );
+            
+            Promise.all(fetchPromises)
+                .then(responses => {
+                    const responseData = responses.map(response => response);
+                    console.log('Fetched data:', responseData);
+                })
+                .catch(error => console.error('Error fetching data:', error));
+        }
+    }
 
     return<>
         <div className='ImageSelection bg-zinc-900' style={{width:'13rem'}}>
