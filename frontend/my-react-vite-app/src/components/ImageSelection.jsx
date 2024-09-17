@@ -2,20 +2,24 @@ import * as React from 'react';
 import Input from './Input';
 import dummyImage from '../assets/unsplash.jpg';
 import { useAuth0 } from "@auth0/auth0-react";
+import Spinner from './Spinner';
 
-const ImageSelection = ({setImage}) =>{
+const ImageSelection = ({setImage, canvas}) =>{
     const {getAccessTokenSilently} = useAuth0();
     const [productName, setProductName] = React.useState("");
     const [discount, setDiscount] = React.useState("");
     const [theme, setTheme] = React.useState("");
     const [userToken, setUserToken] = React.useState('');
-    const [pixelWidth, setPixelWidth] = React.useState('');
-    const [pixelHeight, setPixelHeight] = React.useState('');
-
-
+    const [loading, setLoading] = React.useState(false);
+    const [resImages, setResImages] = React.useState();
+    
     React.useEffect(()=>{
         const getToken=async()=>{
-            const token = await getAccessTokenSilently();
+            const token = await getAccessTokenSilently({
+                authorizationParams:{
+                    audience:'https://dev-zhqru81kwfzddklq.jp.auth0.com/api/v2/'
+                }
+            });
             setUserToken(token);
             return token;
         }
@@ -23,34 +27,46 @@ const ImageSelection = ({setImage}) =>{
     }, [])
 
     const submitSearch = ()=>{
-        if(userToken && productName && pixelWidth && pixelHeight){
+        if(userToken && productName && canvas.width && canvas.height){
+            setLoading(true);
             const urlsToFetch = [
-                `${window.location.hostname}:5000/imagegen`,
-                `${window.location.hostname}:5000/imagegen`,
-                `${window.location.hostname}:5000/imagegen`,
-                `${window.location.hostname}:5000/imagegen`
+                `http://${window.location.hostname}:5000/imagen`,
+                `http://${window.location.hostname}:5000/imagen`,
+                `http://${window.location.hostname}:5000/imagen`,
+                `http://${window.location.hostname}:5000/imagen`
             ];
             
             const fetchPromises = urlsToFetch.map(url => 
                 fetch(url, {
                     method:'POST',
-                    body:{
+                    body:JSON.stringify({
                         'search':productName,
                         'theme':theme,
                         'discount':discount,
-                        'width':pixelWidth,
-                        'height':pixelHeight
+                        'width':canvas.width,
+                        'height':canvas.height
+                    }),
+                    headers: {
+                        'Authorization': 'Bearer ' + userToken,
+                        'Content-Type': 'application/json'
                     }
                 })
-                    .then(response => response.json())
+                    .then(response => response.blob())
             );
             
             Promise.all(fetchPromises)
                 .then(responses => {
                     const responseData = responses.map(response => response);
-                    console.log('Fetched data:', responseData);
+                    // if(e.target.files.length !== 0){
+                    //     this.setState({image: URL.createObjectURL(e.target.files[0])})
+                    //   }
+                    // const url = URL.createObjectURL(responseData);
+                    // console.log(url);
+                    const url = responseData.map(i=>URL.createObjectURL(i));
+                    setResImages(url);
                 })
-                .catch(error => console.error('Error fetching data:', error));
+                .catch(error => console.error('Error fetching data:', error))
+                .finally(()=>setLoading(false));
         }
     }
 
@@ -64,19 +80,19 @@ const ImageSelection = ({setImage}) =>{
                 <Input label={'Theme (optional)'} value={theme} onChange={(e)=>setTheme(e.target.value)}/>
                 <div className='text-sm text-zinc-200' style={{fontSize:'8px', fontStyle:'italic'}}>Eg., Diwali, Independence Day..etc</div>
             </div>
-            <button className='py-2 px-3 items-center gap-x-2 text-sm font-medium rounded-lg border border-[#9ef01a] bg-[#9ef01a] text-black shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none'>Search</button>
-            <div className='flex justify-around mt-5 flex-wrap'>
+            <button onClick={submitSearch} className='py-2 px-3 items-center gap-x-2 text-sm font-medium rounded-lg border border-[#9ef01a] bg-[#9ef01a] text-black shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none'>Search</button>
+            <div className='relative'>
+            {loading && <Spinner/>}
+            {!loading && resImages && <div className='flex justify-around mt-5 flex-wrap'>
                 
-                <img className='mb-5' id={'select-image-1'} onClick={()=>setImage('select-image-1')} src={dummyImage} width={75} height={75}/>
+                {resImages.map((img, idx)=><>
+                    <img className='mb-5' id={'select-image-'+(idx+1)} onClick={()=>setImage('select-image-'+(idx+1))} src={img} alt={dummyImage} width={75} height={75}/>
                 
-                <img className='mb-5' id={'select-image-2'} onClick={()=>setImage('select-image-2')} src={dummyImage} width={75} height={75}/>
-               
-                <img className='mb-5' id={'select-image-3'} onClick={()=>setImage('select-image-3')} src={dummyImage} width={75} height={75}/>
+                </>)}
                 
-                <img className='mb-5' id={'select-image-4'} onClick={()=>setImage('select-image-4')} src={dummyImage} width={75} height={75}/>
-                
-                
+            </div>}
             </div>
+            
         </div>
     </>
 };

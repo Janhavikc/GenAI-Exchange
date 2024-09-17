@@ -16,7 +16,7 @@
 .CanvasSettings{
     position: fixed;
     right: 16px;
-    top: 70%;
+    top: 75%;
     transform: translateY(-50%);
     gap: 8px;
     display: flex;
