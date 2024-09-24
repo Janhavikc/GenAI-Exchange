@@ -26,7 +26,7 @@ function Navbar() {
 
   
   return (<>
-    <header className="fixed flex flex-wrap sm:justify-start bg-zinc-900 sm:flex-nowrap w-full text-sm py-3 z-50">
+    <header className="static flex flex-wrap sm:justify-start bg-zinc-900 sm:flex-nowrap w-full text-sm py-3 z-50">
   <nav className="max-w-[85rem] w-full mx-auto px-4 flex flex-wrap basis-full items-center justify-between">
     
   <div className="relative inset-y-0 left-0 flex items-center sm:hidden mr-3">
@@ -68,7 +68,7 @@ function Navbar() {
       <Link to="/#aboutus" className={`px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white ${url?.includes('#aboutus')?'border-b-4 border-[#9ef01a]':''}`}>About us</Link>
       </div>
     </div>
-    {profileInfo &&<div className="absolute right-0 z-10 w-48 origin-top-right rounded-md bg-zinc-00 text-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1" style={{marginTop:'10%', marginRight: '20px'}}>
+    {profileInfo &&<div className="absolute right-0 z-10 w-48 origin-top-right rounded-md bg-zinc-900 text-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1" style={{marginTop:'10%', marginRight: '20px'}}>
            
     <div className="block px-4 py-2 text-sm text-[#9ef01a]" role="menuitem" tabindex="-1" id="user-menu-item-0">{user?.name}</div>
     <hr className='border-white'/>

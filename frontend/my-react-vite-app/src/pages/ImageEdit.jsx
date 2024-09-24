@@ -132,7 +132,7 @@ const ImageEdit = ()=>{
             <button onClick={deletePolygonHandler} className='border-none bg-none flex justify-center'>
              <RiDeleteBinLine/>
             </button>
-            {imageSelected && <ImageSelection setImage={setImage}/>}
+            {imageSelected && <ImageSelection setImage={setImage} canvas={canvas}/>}
             
         </div>
         
