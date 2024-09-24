@@ -6,6 +6,7 @@ import { SiContentstack } from "react-icons/si";
 import { Link, useNavigate } from 'react-router-dom';
 import dummyImage from '../assets/unsplash.jpg';
 import empty from '../assets/empty.svg';
+import * as uuid from 'uuid';
 
 const Design = () =>{
     const {getAccessTokenSilently} = useAuth0();
@@ -62,7 +63,7 @@ const Design = () =>{
         <hr className='m-2'/>
         <div className='m-5'>
             <div>
-            <button onClick={()=>navigate('/design/image-banner')} style={{float:'right'}} className='text-base font-medium bg-[#9ef01a] mb-5 rounded-lg border border-[#9ef01a] p-3 text-zinc-900'>Create banner</button>
+            <button onClick={()=>navigate('/design/image-banner?q='+uuid.v4())} style={{float:'right'}} className='text-base font-medium bg-[#9ef01a] mb-5 rounded-lg border border-[#9ef01a] p-3 text-zinc-900'>Create banner</button>
             </div>
             <div>
             <div className='flex justify-center' style={{clear:'both'}}>
