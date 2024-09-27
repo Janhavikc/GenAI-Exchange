@@ -29,7 +29,6 @@ const CanvasSettings=({canvas})=>{
         }
     }
     const downloadCanvas=()=>{
-        console.log(canvas)
          const URL = canvas.toDataURL('png');
          var link = document.createElement("a");
         link.download = 'snapgen.png';

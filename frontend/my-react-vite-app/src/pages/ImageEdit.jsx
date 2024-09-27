@@ -5,44 +5,129 @@ import './ImageEdit.css';
 import Settings from '../components/Settings.jsx';
 import CanvasSettings from '../components/CanvasSettings.jsx';
 import { TfiText } from "react-icons/tfi";
-import { handleObjectMoving, clearGuidlines } from '../components/snappingHelpers.jsx';
 import { RiDeleteBinLine } from "react-icons/ri";
 import { GoImage } from "react-icons/go";
 import ImageSelection from '../components/ImageSelection.jsx';
+import {useSearchParams} from 'react-router-dom';
+import { useAuth0 } from "@auth0/auth0-react";
 
 
 const ImageEdit = ()=>{
     const canvasRef = React.useRef(null);
+    const {getAccessTokenSilently} = useAuth0();
     const [canvas, setCanvas] = React.useState(null);
     const [guidlines, setGuidelines] = React.useState([]);
     const [selectedObject, setSelectedObject] = React.useState(null);
     const [imageSelected, setImageSelected] = React.useState(false);
     const [image, setImage] = React.useState("");
+    const [token, setToken] = React.useState("");
+    const [searchParams] = useSearchParams();
+    const canvas_id = searchParams.get('q');
+    const initCanvas = React.useRef(null);
+    
 
     React.useEffect(()=>{
-        if(canvasRef.current){
-            const initCanvas = new Canvas(canvasRef.current, {
+        const getToken=async()=>{
+            const token = await getAccessTokenSilently({
+                authorizationParams:{
+                    audience:'https://dev-zhqru81kwfzddklq.jp.auth0.com/api/v2/'
+                }
+            });
+            setToken(token);
+            
+            return token;
+        }
+
+       getToken()
+    }, []);
+
+    const loadCanvasFromDB = async() =>{
+        
+        try{
+            const res = await fetch(`http://${window.location.hostname}:5000/api/get-one-banner?canvas_id=${canvas_id}`,{
+            method:'GET',
+            headers: {
+                'Authorization': 'Bearer ' + token,
+                'Content-Type': 'application/json'
+            }});
+            const data = await res.json();
+            if(data?.canvas){
+
+                initCanvas.current.clear();
+                initCanvas.current.loadFromJSON(JSON.stringify(data.canvas), ()=>{
+                    initCanvas.current.renderAll()
+                });
+                setCanvas(initCanvas.current);
+
+                setTimeout(()=>initCanvas.current.renderAll(), 1)
+                
+            }
+        }catch(e){
+            console.error(e);
+        } 
+    }
+
+    React.useEffect(()=>{
+        if(canvasRef.current && token){
+           initCanvas.current = new Canvas(canvasRef.current, {
                 width:500,
                 height:500,
                 preserveObjectStacking:true
             });
 
-            initCanvas.backgroundColor = '#fff';
-            initCanvas.renderAll()
-            setCanvas(initCanvas);
+            initCanvas.current.backgroundColor = '#fff';
+            initCanvas.current.renderAll();
 
-            initCanvas.on("object:moving", (event)=>{
-                handleObjectMoving(initCanvas, event.target, guidlines, setGuidelines)
-            })
-            initCanvas.on("object:modified", ()=>{
-                clearGuidlines(initCanvas, guidlines, setGuidelines)
-            })
+            setCanvas(initCanvas.current);
+    
+            loadCanvasFromDB()
+        
+            const updateCanvas= async()=>{
+                if(token){
+                    initCanvas.current.backgroundColor = '#fff';
+                    try{
+                        await fetch(`http://${window.location.hostname}:5000/api/update-image-banner`,{
+                            method:'PUT',
+                            headers: {
+                                'Authorization': 'Bearer ' + token,
+                                'Content-Type': 'application/json'
+                            },
+                            body:JSON.stringify({
+                                canvas_id,
+                                canvas:initCanvas.current,
+                                imageData: initCanvas.current.toDataURL('png')
+                            })
+                        });
+        
+                    }catch(e){
+                        console.error(e);
+                    }
+                }
+            };
+           
+            initCanvas.current.on('object:added', updateCanvas);
+            initCanvas.current.on('object:modified', updateCanvas);
+            initCanvas.current.on('object:removed', updateCanvas);
+
+        
+            // initCanvas.on("object:moving", (event)=>{
+            //     handleObjectMoving(initCanvas, event.target, guidlines, setGuidelines)
+            // })
+            // initCanvas.on("object:modified", ()=>{
+            //     clearGuidlines(initCanvas, guidlines, setGuidelines)
+            // })
 
             return()=>{
-                initCanvas.dispose();
+
+                initCanvas.current.off('object:added', updateCanvas);
+            initCanvas.current.off('object:modified', updateCanvas);
+            initCanvas.current.off('object:removed', updateCanvas);
+                
+                initCanvas.current.dispose();
             }
         }
-    }, [])
+    }, [token])
+
 
     const addRectangle =()=>{
         setImageSelected(false);

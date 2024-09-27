@@ -9,7 +9,7 @@ from flask import send_from_directory
 from google.cloud import aiplatform
 from flask_pymongo import PyMongo
 from flask_cors import cross_origin # type: ignore
-from . import imagen_bp, mongo
+from . import imagen_bp, db
 from api.users import requires_auth, get_user_info
 
 
@@ -86,25 +86,32 @@ def imagen():
     )
 
 
+
+@imagen_bp.route("/update-image-banner", methods=["PUT"])
 @cross_origin(headers=["Content-Type", "Authorization"])
 @requires_auth
-@imagen_bp.route("/update-image-banner", methods=["PUT"])
 def updateImageBanner():
 
     obj = request.get_json()
     # print(g.user_info)
     user_email = get_user_info()
-    mongo.db.imagebanner.update_one(filter={"email": user_email, "canvas_id":obj["canvas_id"]}, update={"$set":{"canvas":obj["canvas"]}})
-    return jsonify({"user mail":user_email})
+    db.imagebanner.find_one_and_update(filter={"email": user_email, "canvas_id":obj["canvas_id"]},upsert=True ,update={"$set":{"canvas":obj["canvas"], "imageData": obj["imageData"]}})
+    return jsonify('Updated Sucessfully')
 
 
-# @cross_origin(headers=["Content-Type", "Authorization"])
-# @requires_auth
-# @imagen_bp.route("/create-image-banner", methods=["POST"])
-# def createImageBanner():
+@imagen_bp.route("/get-all-banner", methods=["GET"])
+@cross_origin(headers=["Content-Type", "Authorization"])
+@requires_auth
+def getAllBanner():
+    user_email = get_user_info() 
+    return jsonify([cur for cur in db.imagebanner.find(filter={"email": user_email}, projection={'_id': False, 'email':False})])
 
-#     obj = request.get_json()
-#     # print(g.user_info)
-#     user_email = get_user_info()
-#     mongo.db.imagebanner.insert_one(document=obj)
-#     return jsonify({"user mail":user_email})
+
+@imagen_bp.route("/get-one-banner", methods=["GET"])
+@cross_origin(headers=["Content-Type", "Authorization"])
+@requires_auth
+def getBanner():
+    canvas_id = request.args.get('canvas_id')
+    user_email = get_user_info() 
+    canvas_data = db.imagebanner.find_one(filter={"email": user_email, "canvas_id":canvas_id}, projection={'_id': False, 'email':False})
+    return jsonify(canvas_data) if canvas_data else jsonify({})

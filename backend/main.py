@@ -2,7 +2,6 @@
 
 from flask import Flask
 from api import users_bp, imagen_bp
-from flask_pymongo import PyMongo
 
 
 APP = Flask(__name__)
@@ -11,8 +10,6 @@ APP = Flask(__name__)
 APP.register_blueprint(users_bp, url_prefix='/api')
 APP.register_blueprint(imagen_bp, url_prefix='/api')
 
-APP.config["MONGO_URI"] = "mongodb://localhost:27017/GenAI-Hackathon"
-mongo = PyMongo(APP)
 
 @APP.route("/")
 def hello_world():
