@@ -6,12 +6,16 @@ import { SiContentstack } from "react-icons/si";
 import { Link, useNavigate } from 'react-router-dom';
 import dummyImage from '../assets/unsplash.jpg';
 import empty from '../assets/empty.svg';
+import * as uuid from 'uuid';
+import Spinner from '../components/Spinner';
 
 const Design = () =>{
     const {getAccessTokenSilently} = useAuth0();
     const [userToken, setUserToken] = React.useState('');
     const [currentTab, setCurrentTab] = React.useState('Image banner');
     const navigate = useNavigate();
+    const [data, setData] = React.useState([]);
+    const [loading, setLoading] = React.useState(true);
 
     React.useEffect(()=>{
         const getToken=async()=>{
@@ -24,7 +28,36 @@ const Design = () =>{
             return token;
         }
         getToken();
-    }, [])
+    }, []);
+
+
+    React.useEffect(()=>{
+        const getCanvasHistory =async()=>{
+            if(userToken){
+                setLoading(true);
+                try{
+                    const res = await fetch(`http://${window.location.hostname}:5000/api/get-all-banner`,{
+                    method:'GET',
+                    headers: {
+                        'Authorization': 'Bearer ' + userToken,
+                        'Content-Type': 'application/json'
+                    }});
+                    const d = await res.json();
+                    setData(d);
+
+                }catch(e){
+                    console.error(e);
+                }finally{
+                    setLoading(false);
+                }
+
+            }
+            
+        }
+        getCanvasHistory();
+    }, [userToken]);
+
+    console.log(data);
     
     
     return<div className='bg-white' style={{height:'100vh'}}>
@@ -62,46 +95,30 @@ const Design = () =>{
         <hr className='m-2'/>
         <div className='m-5'>
             <div>
-            <button onClick={()=>navigate('/design/image-banner')} style={{float:'right'}} className='text-base font-medium bg-[#9ef01a] mb-5 rounded-lg border border-[#9ef01a] p-3 text-zinc-900'>Create banner</button>
+            <button onClick={()=>navigate('/design/image-banner?q='+uuid.v4())} style={{float:'right'}} className='text-base font-medium bg-[#9ef01a] mb-5 rounded-lg border border-[#9ef01a] p-3 text-zinc-900'>Create banner</button>
             </div>
-            <div>
+            
+            {loading && <div className='relative'>
+                <Spinner/>    
+            </div>}
+
+            {!loading && data.length==0 && <div>
             <div className='flex justify-center' style={{clear:'both'}}>
                 <img src={empty} width={'250px'} height={'250px'}></img>
                 
             </div>
             <p className='text-black flex justify-center'>Your design is empty. Please start a new design</p>
-            </div>
+            </div>}
 
-            {/* <div className="grid grid-cols-3 gap-4 mb-4" style={{clear:'both'}}>
-            <div className="flex items-center justify-center h-24 rounded bg-gray-50 dark:bg-gray-800" style={{height:'max-content'}}>
+           {!loading && data.length &&<div className="grid grid-cols-3 gap-4 mb-4" style={{clear:'both'}}>
+            {data.map((i, idx)=><div key={idx} className="flex items-center border border-[#004b23] justify-center h-24 rounded bg-gray-50 dark:bg-gray-800" style={{height:'max-content'}}>
             
-                <Link to="/design/image-banner" className='rounded-xl w-full' style={{display: "block", overflow:"hidden", height:'max-content'}}>
-                    <img src={dummyImage} alt="img" style={{objectFit: 'cover'}}/>
+                <Link to={"/design/image-banner?q=" + i.canvas_id} className='rounded-xl w-full' style={{display: "block", overflow:"hidden", height:'max-content'}}>
+                    <img src={i.imageData} alt="img" style={{objectFit: 'cover'}}/>
                 </Link>
                 
-            </div>    
-            <div className="flex items-center justify-center h-24 rounded bg-gray-50 dark:bg-gray-800" style={{height:'max-content'}}>
-            
-                <Link to="/design/image-banner" className='rounded-xl w-full' style={{display: "block", overflow:"hidden", height:'max-content'}}>
-                    <img src={dummyImage} alt="img" style={{objectFit: 'cover'}}/>
-                </Link>
-                
-            </div>    
-            <div className="flex items-center justify-center h-24 rounded bg-gray-50 dark:bg-gray-800" style={{height:'max-content'}}>
-            
-                <Link to="/design/image-banner" className='rounded-xl w-full' style={{display: "block", overflow:"hidden", height:'max-content'}}>
-                    <img src={dummyImage} alt="img" style={{objectFit: 'cover'}}/>
-                </Link>
-                
-            </div>    
-            <div className="flex items-center justify-center h-24 rounded bg-gray-50 dark:bg-gray-800" style={{height:'max-content'}}>
-            
-                <Link to="/design/image-banner" className='rounded-xl w-full' style={{display: "block", overflow:"hidden", height:'max-content'}}>
-                    <img src={dummyImage} alt="img" style={{objectFit: 'cover'}}/>
-                </Link>
-                
-            </div>    
-            </div>     */}
+            </div>)}   
+           </div>}
         </div>
         </div>
     </div>}

@@ -13,22 +13,22 @@ const Settings = ({canvas, currentObj}) =>{
    
     React.useEffect(()=>{
         if(canvas){
-            canvas.on("selection:created", (event)=>{
+            canvas?.on("selection:created", (event)=>{
                 handleObjectSelection(event.selected[0])
             })
-            canvas.on("selection:updated", (event)=>{
+            canvas?.on("selection:updated", (event)=>{
                 handleObjectSelection(event.selected[0])
             })
-            canvas.on("selection:cleared", (event)=>{
+            canvas?.on("selection:cleared", (event)=>{
                 setSelectedObject(null);
                 currentObj(null);
                 clearSettings();
             })
 
-            canvas.on("object:modified", (event)=>{
+            canvas?.on("object:modified", (event)=>{
                 handleObjectSelection(event.target)
             })
-            canvas.on("object:scaling", (event)=>{
+            canvas?.on("object:scaling", (event)=>{
                 handleObjectSelection(event.target)
             })
             
