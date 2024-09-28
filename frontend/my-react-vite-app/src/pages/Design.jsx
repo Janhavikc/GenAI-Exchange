@@ -8,6 +8,7 @@ import dummyImage from '../assets/unsplash.jpg';
 import empty from '../assets/empty.svg';
 import * as uuid from 'uuid';
 import Spinner from '../components/Spinner';
+import VideoEditor from '../components/VideoEditor';
 
 const Design = () =>{
     const {getAccessTokenSilently} = useAuth0();
@@ -23,6 +24,7 @@ const Design = () =>{
                 authorizationParams:{
                     audience:'https://dev-zhqru81kwfzddklq.jp.auth0.com/api/v2/'
                 }
+                
             });
             setUserToken(token);
             return token;
@@ -57,12 +59,10 @@ const Design = () =>{
         getCanvasHistory();
     }, [userToken]);
 
-    console.log(data);
     
-    
-    return<div className='bg-white' style={{height:'100vh'}}>
+    return<div className='bg-white' style={{display:'flex'}}>
     {/* Side bar */}
-    <aside id="default-sidebar" className="static top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0" aria-label="Sidebar">
+    <aside id="default-sidebar" className="z-40 w-64 transition-transform -translate-x-full sm:translate-x-0" aria-label="Sidebar">
    <div className="h-full px-3 py-4 overflow-y-auto bg-zinc-900">
     <h1 className='py-5'>Workspace</h1>
       <ul className="space-y-2 py-5 font-medium border-t border-gray-200">
@@ -73,7 +73,10 @@ const Design = () =>{
             </button>
          </li>
          <li>
-           <button onClick={()=>setCurrentTab('Video trailer')}  className={`flex items-center p-2 text-white rounded-lg hover:bg-[#004b23] group ${currentTab=='Video trailer'? 'bg-[#004b23]':''}`}>
+           <button onClick={()=>{
+            setCurrentTab('Video trailer')
+            
+            }}  className={`flex items-center p-2 text-white rounded-lg hover:bg-[#004b23] group ${currentTab=='Video trailer'? 'bg-[#004b23]':''}`}>
                <CiVideoOn size={30} color='white'/>
                <span className="ms-3">Generate Video Trailer</span>
             </button>
@@ -89,7 +92,7 @@ const Design = () =>{
       </ul>
    </div>
 </aside>
-    {currentTab=="Image banner" && <div className="absolute p-4 sm:ml-64" style={{width:'75%', top:'15%'}}>
+    {currentTab=="Image banner" && <div className="p-4 mt-5" style={{width:'75%'}}>
         <div className='px-3'>
         <h1 className='text-2xl text-black'>Design High quality image banner with AI</h1>
         <hr className='m-2'/>
@@ -113,7 +116,7 @@ const Design = () =>{
            {!loading && data.length &&<div className="grid grid-cols-3 gap-4 mb-4" style={{clear:'both'}}>
             {data.map((i, idx)=><div key={idx} className="flex items-center border border-[#004b23] justify-center h-24 rounded bg-gray-50 dark:bg-gray-800" style={{height:'max-content'}}>
             
-                <Link to={"/design/image-banner?q=" + i.canvas_id} className='rounded-xl w-full' style={{display: "block", overflow:"hidden", height:'max-content'}}>
+                <Link to={"/design/image-banner?q=" + i.canvas_id} className='w-full' style={{display: "block", overflow:"hidden", height:'max-content'}}>
                     <img src={i.imageData} alt="img" style={{objectFit: 'cover'}}/>
                 </Link>
                 
@@ -122,7 +125,16 @@ const Design = () =>{
         </div>
         </div>
     </div>}
-    {currentTab=="Video trailer" && <div>Video trailer</div>}
+    {currentTab=="Video trailer" && <div className="p-4 mt-5" style={{width:'75%'}}>
+        <div className='px-3'>
+        <h1 className='text-2xl text-black'>Generate Video trailer with AI</h1>
+        <hr className='m-2'/>
+        <div className='m-5'>
+            <VideoEditor token={userToken}/>
+        </div>
+        </div>
+        </div>
+        }
     {currentTab=="Contents" && <div>Contents</div>}
     </div>;
 }

@@ -4,7 +4,7 @@ import LandingPage from '../components/LandingPage';
 import Marquee from '../components/Marquee';
 import About from '../components/About';
 import Eyes from '../components/Eyes';
-import Cards from '../components/cards';
+import Cards from '../components/Cards';
 
 const Home = ()=>{
   
