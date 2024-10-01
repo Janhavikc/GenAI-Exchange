@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { useAuth0 } from "@auth0/auth0-react";
 import {useLocation, Link} from 'react-router-dom';
+import logo from '../assets/Frame 3.svg'
 
-function Navbar() {
+function Navbar({aboutUsRef}) {
   const { loginWithRedirect, isAuthenticated, user, logout} = useAuth0();
   const location = useLocation(); // once ready it returns the 'window.location' object
   const [url, setUrl] = useState(null);
@@ -47,7 +48,12 @@ function Navbar() {
   </div>
     
     
-    <a className="sm:order-1 flex-none text-xl font-semibold dark:text-white focus:outline-none focus:opacity-80" href="#">Snapgen</a>
+    <a className="sm:order-1 flex text-xl font-semibold dark:text-white focus:outline-none focus:opacity-80" href="#">
+      <img src={logo} alt="logo" width={35} height={35}/>
+      <div className='ml-2 mt-1' style={{fontFamily:'"Poppins", sans-serif'}}>
+      Snapgen
+      </div>
+    </a>
     
     <div className="sm:order-3 flex items-center gap-x-2">
       
@@ -65,7 +71,11 @@ function Navbar() {
       <div className="flex flex-col gap-5 mt-5 sm:flex-row sm:items-center sm:mt-0 sm:ps-5">
       <Link to="/" className={`px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white ${url=='/'?'border-b-4 border-[#9ef01a]':''}`}>Home</Link>
       <Link to="/design" className={`px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white ${url?.includes('design')?'border-b-4 border-[#9ef01a]':''}`}>Design</Link>          
-      <Link to="/#aboutus" className={`px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white ${url?.includes('#aboutus')?'border-b-4 border-[#9ef01a]':''}`}>About us</Link>
+      <Link to="/#aboutus" onClick={()=>{
+        if(aboutUsRef.current){
+          aboutUsRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }} className={`px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white ${url?.includes('#aboutus')?'border-b-4 border-[#9ef01a]':''}`}>About us</Link>
       </div>
     </div>
     {profileInfo &&<div className="absolute right-0 z-10 w-48 origin-top-right rounded-md bg-zinc-900 text-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1" style={{marginTop:'10%', marginRight: '20px'}}>

@@ -13,17 +13,18 @@ import LocomotiveScroll from 'locomotive-scroll';
 function App() {
   const locomotiveScroll = new LocomotiveScroll();
   const {isLoading} = useAuth0();
+  const aboutUsRef = React.useRef(null);
   
   return (
     <div className='w-full min-h-screen bg-zinc-900 text-white'>
         {isLoading ?<>
           <Spinner/>
         </>:<>
-        <Navbar/>
+        <Navbar aboutUsRef={aboutUsRef}/>
         <Routes>
           <Route path='/design/image-banner' element={<PrivateRoute component={ImageEdit}/>}/>
           <Route path='/design' element={<PrivateRoute component={Design}/>} exact/>
-          <Route path='/' element={<Home/>} exact/>
+          <Route path='/' element={<Home aboutUsRef={aboutUsRef}/>} exact/>
 
           
         </Routes>

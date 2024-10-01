@@ -1,15 +1,20 @@
 import React from 'react'
 
-function About() {
+function About({aboutUsRef}) {
   return (
-    <div  className='w-full p-20 bg-[#9ef01a] rounded-tl-3xl rounded-tr-3xl text-black'>
-      <h1 className='font-["Neue_Montreal"] text-[4vw] leading-[4.5vw] tracking-tight'>snapgen is a generate beautiful and high quality banners adaptable to various themes and promotional offers with imagen powered by vertex Ai studio. edit your images according to your requirements</h1>
-      <div className='w-full flex gap-5 border-t-[1px] pt-10 mt-20 border-[#a1b562]'>
-        <div className='w-1/2'> <h1 className='text-5xl'>Easy-Peasy :</h1></div>
-        <div className='w-[90vh] h-[70vh] rounded-3xl bg-[#CDEA68]'>
+    <div ref={aboutUsRef} className='w-full p-20 bg-[#9ef01a] rounded-tl-3xl rounded-tr-3xl text-black'>
+      <h1 className='font-["Neue_Montreal"] text-[4vw] leading-[4.5vw] tracking-tight'>
+        Snapgen generates high quality of images and videos quickly using Google's Imagen AI. Try out Snapgen today for free, easy to use even for non-designers! 
+      </h1>
+      {/* <div className='w-full flex gap-5 border-t-[1px] pt-10 mt-20 border-[#a1b562]'>
+
+        <div className='w-[90vh] h-[70vh] rounded-3xl bg-[#CDEA68] flex'>
           <img src="" alt="" />
         </div>
-      </div>
+        <div className='w-[90vh] h-[70vh] rounded-3xl bg-[#CDEA68] flex'>
+          <img src="" alt="" />
+        </div>
+      </div> */}
     </div>
     
     
