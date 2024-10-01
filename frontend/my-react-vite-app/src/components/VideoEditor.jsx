@@ -19,32 +19,6 @@ const VideoEditor = ({token}) =>{
         // corePath:'http://localhost:3000/src/components/ffmpeg-core.js'
     })
 
-    React.useEffect(() => {
-        // Enable cross-origin isolation for this page only
-        document.head.appendChild(createMetaTag('Cross-Origin-Embedder-Policy', 'require-corp'));
-        document.head.appendChild(createMetaTag('Cross-Origin-Opener-Policy', 'same-origin'));
-    
-        return () => {
-          // Clean up headers when navigating away from the page
-          removeMetaTag('Cross-Origin-Embedder-Policy');
-          removeMetaTag('Cross-Origin-Opener-Policy');
-        };
-      }, []);
-    
-      const createMetaTag = (name, content) => {
-        const meta = document.createElement('meta');
-        meta.httpEquiv = name;
-        meta.content = content;
-        return meta;
-      };
-    
-      const removeMetaTag = (name) => {
-        const meta = document.querySelector(`meta[http-equiv="${name}"]`);
-        if (meta) {
-          document.head.removeChild(meta);
-        }
-      };
-
     const createVideo = async()=>{
         if(token && productName && theme && frame){
         try{
@@ -54,7 +28,7 @@ const VideoEditor = ({token}) =>{
             await ffmpeg.load();
             let urlsToFetch = [];
             for(let i=0; i<frame; i++){
-                urlsToFetch.push(`http://${window.location.hostname}:5000/api/imagen`)
+                urlsToFetch.push(`https://${window.location.hostname}/api/imagen`)
             }
            
             

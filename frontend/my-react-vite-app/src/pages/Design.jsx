@@ -38,7 +38,7 @@ const Design = () =>{
             if(userToken){
                 setLoading(true);
                 try{
-                    const res = await fetch(`http://${window.location.hostname}:5000/api/get-all-banner`,{
+                    const res = await fetch(`https://${window.location.hostname}/api/get-all-banner`,{
                     method:'GET',
                     headers: {
                         'Authorization': 'Bearer ' + userToken,
@@ -60,7 +60,7 @@ const Design = () =>{
     }, [userToken]);
 
     
-    return<div className='bg-white' style={{display:'flex'}}>
+    return<div className='bg-white' style={{display:'flex', minHeight:'100vh'}}>
     {/* Side bar */}
     <aside id="default-sidebar" className="z-40 w-64 transition-transform -translate-x-full sm:translate-x-0" aria-label="Sidebar">
    <div className="h-full px-3 py-4 overflow-y-auto bg-zinc-900">
@@ -81,12 +81,12 @@ const Design = () =>{
                <span className="ms-3">Generate Video Trailer</span>
             </button>
          </li>
-         <li>
+         {/* <li>
             <button onClick={()=>setCurrentTab('Contents')}  className={`flex items-center p-2 text-white rounded-lg hover:bg-[#004b23] ${currentTab=='Contents'? 'bg-[#004b23]':''} group`}>
                <SiContentstack size={30} color='white'/>
                <span className="ms-3">Generate Promotional Contents</span>
             </button>
-         </li>
+         </li> */}
         
         
       </ul>

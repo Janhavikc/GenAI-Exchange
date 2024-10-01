@@ -30,10 +30,10 @@ const ImageSelection = ({setImage, canvas}) =>{
         if(userToken && productName && canvas.width && canvas.height){
             setLoading(true);
             const urlsToFetch = [
-                `http://${window.location.hostname}:5000/api/imagen`,
-                `http://${window.location.hostname}:5000/api/imagen`,
-                `http://${window.location.hostname}:5000/api/imagen`,
-                `http://${window.location.hostname}:5000/api/imagen`
+                `https://${window.location.hostname}/api/imagen`,
+                `https://${window.location.hostname}/api/imagen`,
+                `https://${window.location.hostname}/api/imagen`,
+                `https://${window.location.hostname}/api/imagen`
             ];
             
             const fetchPromises = urlsToFetch.map(url => 
