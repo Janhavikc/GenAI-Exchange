@@ -8,7 +8,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import Spinner from './components/Spinner';
 import PrivateRoute from './components/PrivateRoute';
 import ImageEdit from './pages/ImageEdit';
-import Try from './components/try';
+import Try from './components/Try';
 
 function App() {
   const {isLoading, isAuthenticated} = useAuth0();
