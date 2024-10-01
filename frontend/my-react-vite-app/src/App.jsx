@@ -1,5 +1,5 @@
 import React from 'react'
-import { Route, Routes, useNavigate} from 'react-router-dom'
+import { Route, Routes} from 'react-router-dom'
 import Home from './pages/Home';
 import Design from './pages/Design';
 import Navbar from './components/Navbar';
@@ -11,14 +11,13 @@ import ImageEdit from './pages/ImageEdit';
 import LocomotiveScroll from 'locomotive-scroll';
 
 function App() {
-  const {isLoading} = useAuth0();
   const locomotiveScroll = new LocomotiveScroll();
-
+  const {isLoading} = useAuth0();
+  
   return (
     <div className='w-full min-h-screen bg-zinc-900 text-white'>
         {isLoading ?<>
           <Spinner/>
-      
         </>:<>
         <Navbar/>
         <Routes>
@@ -26,10 +25,9 @@ function App() {
           <Route path='/design' element={<PrivateRoute component={Design}/>} exact/>
           <Route path='/' element={<Home/>} exact/>
 
-    
+          
         </Routes>
         <Footer/>
-      
         </>}
       
     </div>

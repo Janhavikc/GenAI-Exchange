@@ -22,7 +22,8 @@ const Design = () =>{
         const getToken=async()=>{
             const token = await getAccessTokenSilently({
                 authorizationParams:{
-                    audience:'https://dev-zhqru81kwfzddklq.jp.auth0.com/api/v2/'
+                    audience:'https://dev-zhqru81kwfzddklq.jp.auth0.com/userinfo',
+                    scope:'openid profile email'
                 }
                 
             });
