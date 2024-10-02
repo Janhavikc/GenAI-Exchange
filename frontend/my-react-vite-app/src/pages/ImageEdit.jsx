@@ -40,7 +40,7 @@ const ImageEdit = ()=>{
     const loadCanvasFromDB = async() =>{
         
         try{
-            const res = await fetch(`http://${window.location.hostname}:5000/api/get-one-banner?canvas_id=${canvas_id}`,{
+            const res = await fetch(`https://${window.location.hostname}/api/get-one-banner?canvas_id=${canvas_id}`,{
             method:'GET',
             headers: {
                 'Authorization': 'Bearer ' + token,
@@ -82,7 +82,7 @@ const ImageEdit = ()=>{
                 if(token){
                     initCanvas.current.backgroundColor = '#fff';
                     try{
-                        await fetch(`http://${window.location.hostname}:5000/api/update-image-banner`,{
+                        await fetch(`https://${window.location.hostname}/api/update-image-banner`,{
                             method:'PUT',
                             headers: {
                                 'Authorization': 'Bearer ' + token,
