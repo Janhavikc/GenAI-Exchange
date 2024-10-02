@@ -20,12 +20,7 @@ const Design = () =>{
 
     React.useEffect(()=>{
         const getToken=async()=>{
-            const token = await getAccessTokenSilently({
-                authorizationParams:{
-                    audience:'https://dev-zhqru81kwfzddklq.jp.auth0.com/api/v2/'
-                }
-                
-            });
+            const token = await getAccessTokenSilently();
             setUserToken(token);
             return token;
         }
