@@ -15,7 +15,7 @@ function Navbar({aboutUsRef}) {
   }, [location]);
   
   const getNameInitials = (name)=>{
-    const spiltName = name.split(" ");
+    const spiltName = name?.split(" ");
     if(spiltName && spiltName.length==2){
       return spiltName[0].charAt(0).toUpperCase() + spiltName[1].charAt(0).toUpperCase();
     }
@@ -63,7 +63,12 @@ function Navbar({aboutUsRef}) {
       </button>  
       </>:
       <button type="button" className="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-[#9ef01a] bg-[#9ef01a] text-black shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none "
-       onClick={()=>loginWithRedirect()}>
+       onClick={()=>loginWithRedirect({
+        authorizationParams:{
+          audience: 'https://dev-4unr7r0i5pmhss81.jp.auth0.com/api/v2/',
+          scope: 'openid profile email read:users update:users'
+        }
+      })}>
         Login
       </button>}
     </div>
