@@ -2,12 +2,15 @@ from flask import jsonify, request, g
 import json
 from six.moves.urllib.request import urlopen # type: ignore
 from jose import jwt # type: ignore
+from dotenv import load_dotenv
+import os
 from functools import wraps
 from . import users_bp
 
+load_dotenv()
 
-AUTH0_DOMAIN = 'dev-zhqru81kwfzddklq.jp.auth0.com'
-API_AUDIENCE = 'https://dev-zhqru81kwfzddklq.jp.auth0.com/api/v2/'
+AUTH0_DOMAIN = os.getenv('DOMAIN')
+API_AUDIENCE = os.getenv('AUDIENCE')
 ALGORITHMS = ["RS256"]
 
 # Error handler
