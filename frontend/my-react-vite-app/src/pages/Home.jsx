@@ -6,13 +6,13 @@ import About from '../components/About';
 import Eyes from '../components/Eyes';
 import Cards from '../components/Cards';
 
-const Home = ()=>{
-  
+const Home = ({aboutUsRef})=>{
+    
     return<div>
       
       <LandingPage/>
       <Marquee/>
-      <About/>
+      <About aboutUsRef={aboutUsRef}/>
       <Eyes/>
       <Cards/>
       
